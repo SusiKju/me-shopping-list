@@ -3,13 +3,15 @@
     <input
       class="mdl-textfield__input"
       :id="id"
-      :type="inputType"
+      type="text"
       :placeholder="placeholder"
-      :value="modelValue"
+      :value="modelValue || initValue"
       @input="handleInput"
       :disabled="disabled"
+      :pattern="pattern"
     />
-    <label class="mdl-textfield__label" :for="id">{{label}}</label>
+    <label class="mdl-textfield__label" :for="id">{{ label }}</label>
+    <span class="mdl-textfield__error">Input is not a number!</span>
   </div>
 </template>
 
@@ -24,10 +26,12 @@ interface Props {
   placeholder?: string
   modelValue: string
   disabled?: boolean
+  pattern?: string
 }
 
 const props = defineProps<Props>()
 const emit = defineEmits<{ (e: 'update:modelValue', value: string): void }>()
+const initValue = props.inputType === InputTypes.NUMBER ? 1 : ''
 
 const handleInput = (event: Event) => {
   const target = event.target as HTMLInputElement

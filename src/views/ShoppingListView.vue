@@ -1,12 +1,59 @@
+<template>
+  <div class="mdl-grid">
+    <div class="mdl-cell mdl-cell--4-col">
+      <InputComponent
+        id="product"
+        :inputType="InputTypes.TEXT"
+        v-model="newItem"
+        @keyup.enter="addItem"
+        label="Produkt"
+      />
+    </div>
+    <div class="mdl-cell mdl-cell--4-col">
+      <InputComponent
+        id="quantity"
+        :inputType="InputTypes.NUMBER"
+        v-model="newQuantity"
+        @keyup.enter="addItem"
+        label="Anzahl"
+        pattern="-?[0-9]*(\.[0-9]+)?"
+      />
+    </div>
+    <div class="mdl-cell mdl-cell--4-col">
+      <ButtonComponent @click="addItem" :buttonType="ButtonTypes.SECONDARY"
+        >Hinzufügen</ButtonComponent
+      >
+    </div>
+    <div class="mdl-cell mdl-cell--12-col">
+      <ShoppingList
+        :items="items"
+        :removeFromListAction="removeItem"
+        :removeAllFromListAction="removeAll"
+      />
+    </div>
+    showDynamicHint : {{ showDynamicHint }}
+    <br />
+    showStaticHint: {{ showStaticHint }}
+
+    <div v-if="showDynamicHint || showStaticHint" class="mdl-cell mdl-cell--12-col">
+      <Card hd="Hinweis" bd="Du darfst dieses Produkt nicht hinzufügen! Frage zuerst Deinen Papa" :ft="newItem" />
+    </div>
+  </div>
+</template>
+
 // TODO::: Describing https://vuejs.org/api/sfc-script-setup
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue'
+
+// Workaround: module has no default export
 import ButtonComponent from '../components/ButtonComponent.vue'
 import InputComponent from '../components/InputComponent.vue'
+import ShoppingList from '../components/ShoppingList.vue'
+import Card from '../components/Card.vue'
 import { ButtonTypes } from '../types/ButtonTypes'
 import { InputTypes } from '../types/InputTypes'
 
-interface ShoppingItem {
+export interface ShoppingItem {
   name: string
   quantity: number
 }
@@ -15,9 +62,8 @@ const newItem = ref<string>('')
 const newQuantity = ref<number>(1)
 const items = ref<ShoppingItem[]>([])
 
-let showStaticHint = false
-let showDynamicHint = false
-
+let showStaticHint = ref<Boolean>(false)
+let showDynamicHint = ref<Boolean>(false)
 
 const loadItems = () => {
   const savedItems = localStorage.getItem('shopping-list')
@@ -48,23 +94,15 @@ const removeAll = () => {
   saveItems()
 }
 
-
 watch(newItem, () => {
-  if (newItem.value.includes(prohibitedProduct)) {
-    showDynamicHint = true
-  } else {
-    showDynamicHint = false
-  }
+  showDynamicHint.value = newItem.value.includes(prohibitedProduct)
 })
 watch(
   () => items,
   () => {
-    const alcoholItem = items.value.find((item) => (item.name === prohibitedProduct))
-    if (alcoholItem?.name && alcoholItem?.name.length > 0) {
-      showStaticHint = true
-    } else {
-      showStaticHint = false
-    }
+    showStaticHint.value = items.value.find((item) => item.name === prohibitedProduct)
+      ? true
+      : false
   },
   {
     deep: true
@@ -73,57 +111,3 @@ watch(
 
 onMounted(loadItems)
 </script>
-
-<template>
-  <div class="shoppingList">
-    <InputComponent
-      id="product"
-      :inputType="InputTypes.TEXT"
-      v-model="newItem"
-      @keyup.enter="addItem"
-      placeholder="Add item"
-      label="Produkt"
-    />
-    <div class="mdl-textfield mdl-js-textfield">
-      <input
-        type="text"
-        v-model.number="newQuantity"
-        @keyup.enter="addItem"
-        class="mdl-textfield__input"
-        pattern="-?[0-9]*(\.[0-9]+)?"
-      />
-      <label class="mdl-textfield__label" for="sample2">Number...</label>
-      <span class="mdl-textfield__error">Input is not a number!</span>
-      <span class="mdl-textfield__error">Input is not a number!</span>
-    </div>
-    <ButtonComponent @click="addItem" :buttonType="ButtonTypes.PRIMARY">Hinzufügen</ButtonComponent>
-
-    <ul>
-      <li v-for="(item, index) in items" :key="index">
-        {{ item.name }} - {{ item.quantity }}
-        <ButtonComponent @click="removeItem(index)" :buttonType="ButtonTypes.SECONDARY">löschen</ButtonComponent>
-      </li>
-    </ul>
-  </div>
-
-  <ButtonComponent @click="removeAll" :buttonType="ButtonTypes.SECONDARY">Liste löschen</ButtonComponent>
-
-  <div class="demo-card-wide mdl-card mdl-shadow--2dp" v-if="showDynamicHint || showStaticHint">
-    <div class="mdl-card__title">
-      <h2 class="mdl-card__title-text">Hinweis</h2>
-    </div>
-    <div class="mdl-card__supporting-text">Du darfst dieses Produkt nicht hinzufügen!</div>
-    <div class="mdl-card__actions mdl-card--border">
-      <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
-        Frage Deinen Papa!
-      </a>
-    </div>
-  </div>
-</template>
-
-<style>
-@media (min-width: 1024px) {
-  .shoppingList {
-  }
-}
-</style>
