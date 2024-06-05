@@ -1,23 +1,27 @@
 <script setup lang="ts">
+import { onMounted } from 'vue'
 import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+
+const loadScript = () => {
+  console.warn(999);
+
+  const timestamp = Date.now()
+  let recaptchaScript = document.createElement('script')
+  recaptchaScript.setAttribute('src', 'https://code.getmdl.io/1.3.0/material.min.js?v=' + timestamp)
+  document.head.appendChild(recaptchaScript)
+}
+
+onMounted(loadScript)
 </script>
 
 <template>
   <header>
     <nav>
-      <RouterLink to="/">Home</RouterLink>
-      <RouterLink to="/about">About</RouterLink>
-      <RouterLink to="/shoppingList">Shopping List</RouterLink>
+      <RouterLink to="/">Move Elvator Shopping List</RouterLink>
     </nav>
-
-    <!-- <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div> -->
   </header>
 
   <RouterView />
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>

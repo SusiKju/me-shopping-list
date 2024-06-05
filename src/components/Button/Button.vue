@@ -49,6 +49,8 @@ export default {
         ? 'mdl-button--accent'
         : this.buttonType === ButtonTypes.SECONDARY
           ? 'mdl-button--colored'
+          : this.buttonType === ButtonTypes.TERTIARY
+          ? ''
           : 'mdl-button--accent'
     },
 
