@@ -97,6 +97,7 @@ onMounted(loadItems)
       <span class="mdl-textfield__error">Input is not a number!</span>
     </div>
     <ButtonComponent @click="addItem" :buttonType="ButtonTypes.PRIMARY">Hinzufügen</ButtonComponent>
+
     <ul>
       <li v-for="(item, index) in items" :key="index">
         {{ item.name }} - {{ item.quantity }}

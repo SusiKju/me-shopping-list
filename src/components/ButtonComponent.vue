@@ -1,64 +1,43 @@
 <template>
   <div>
-    <div class="mdc-touch-target-wrapper red">
-      <button class="mdl-button mdl-js-button mdl-button--raised" :class="classObject">
+    <div class="mdc-touch-target-wrapper">
+      <button
+        :disabled="disabled"
+        @click="handleClick"
+        class="mdl-button mdl-js-button mdl-button--raised"
+        :class="classObject"
+      >
         <slot />
       </button>
     </div>
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
+import { defineProps, defineEmits } from 'vue'
 import { ButtonTypes } from '../types/ButtonTypes'
-export default {
-  name: 'ME-Button',
-  props: {
-    buttonType: {
-      type: String,
-      enum: ButtonTypes,
-      default: ButtonTypes.PRIMARY
-    },
-    disabled: {
-      type: Boolean,
-      default: false
-    },
-    link: {
-      type: [String, Boolean],
-      default: false
-    },
-    target: {
-      type: [String, Boolean],
-      default: false
-    },
-    type: {
-      type: [String, Boolean],
-      default: false
-    },
-    isBlock: {
-      type: [Boolean],
-      default: false
-    },
-    value: {
-      type: [String, Boolean],
-      default: false
-    }
-  },
-  computed: {
-    classObject: function () {
-      return this.buttonType === ButtonTypes.PRIMARY
-        ? 'mdl-button--accent'
-        : this.buttonType === ButtonTypes.SECONDARY
-          ? 'mdl-button--colored'
-          : this.buttonType === ButtonTypes.TERTIARY
-          ? ''
-          : 'mdl-button--accent'
-    },
 
-    linkComponentTag() {
-      return true
-    }
+interface Props {
+  buttonType?: ButtonTypes
+  placeholder?: string
+  disabled?: boolean
+}
+
+const props = defineProps<Props>()
+const emit = defineEmits<{ (e: 'click'): void }>()
+
+const handleClick = () => {
+  if (!props.disabled) {
+    emit('click')
   }
 }
-</script>
 
-<style lang="scss" scoped></style>
+const classObject =
+  props.buttonType === ButtonTypes.PRIMARY
+    ? 'mdl-button--accent'
+    : props.buttonType === ButtonTypes.SECONDARY
+      ? 'mdl-button--colored'
+      : props.buttonType === ButtonTypes.TERTIARY
+        ? ''
+        : 'mdl-button--accent'
+</script>

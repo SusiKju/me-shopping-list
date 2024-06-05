@@ -3,7 +3,7 @@
     <input
       class="mdl-textfield__input"
       :id="id"
-      :type="type"
+      :type="inputType"
       :placeholder="placeholder"
       :value="modelValue"
       @input="handleInput"
@@ -15,11 +15,12 @@
 
 <script setup lang="ts">
 import { defineProps, defineEmits } from 'vue'
+import { InputTypes } from '../types/InputTypes'
 
 interface Props {
   id: string
   label: string
-  type?: string
+  inputType?: InputTypes
   placeholder?: string
   modelValue: string
   disabled?: boolean
