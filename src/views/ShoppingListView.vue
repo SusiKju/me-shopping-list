@@ -1,8 +1,8 @@
 // TODO::: Describing https://vuejs.org/api/sfc-script-setup
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue'
-import Button from '../components/Button/Button.vue'
-import Input from '../components/Input/Input.vue'
+import ButtonComponent from '../components/ButtonComponent.vue'
+import InputComponent from '../components/InputComponent.vue'
 import { ButtonTypes } from '../types/ButtonTypes'
 import { InputTypes } from '../types/InputTypes'
 
@@ -76,7 +76,7 @@ onMounted(loadItems)
 
 <template>
   <div class="shoppingList">
-    <Input
+    <InputComponent
       id="product"
       :inputType="InputTypes.TEXT"
       v-model="newItem"
@@ -96,16 +96,16 @@ onMounted(loadItems)
       <span class="mdl-textfield__error">Input is not a number!</span>
       <span class="mdl-textfield__error">Input is not a number!</span>
     </div>
-    <Button @click="addItem" :buttonType="ButtonTypes.PRIMARY">Hinzufügen</Button>
+    <ButtonComponent @click="addItem" :buttonType="ButtonTypes.PRIMARY">Hinzufügen</ButtonComponent>
     <ul>
       <li v-for="(item, index) in items" :key="index">
         {{ item.name }} - {{ item.quantity }}
-        <Button @click="removeItem(index)" :buttonType="ButtonTypes.SECONDARY">löschen</Button>
+        <ButtonComponent @click="removeItem(index)" :buttonType="ButtonTypes.SECONDARY">löschen</ButtonComponent>
       </li>
     </ul>
   </div>
 
-  <Button @click="removeAll" :buttonType="ButtonTypes.SECONDARY">Liste löschen</Button>
+  <ButtonComponent @click="removeAll" :buttonType="ButtonTypes.SECONDARY">Liste löschen</ButtonComponent>
 
   <div class="demo-card-wide mdl-card mdl-shadow--2dp" v-if="showDynamicHint || showStaticHint">
     <div class="mdl-card__title">

@@ -9,7 +9,7 @@
       @input="handleInput"
       :disabled="disabled"
     />
-    <label class="mdl-textfield__label" :for="id">{label}</label>
+    <label class="mdl-textfield__label" :for="id">{{label}}</label>
   </div>
 </template>
 

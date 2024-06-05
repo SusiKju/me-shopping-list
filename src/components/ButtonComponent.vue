@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import { ButtonTypes } from '../../types/ButtonTypes'
+import { ButtonTypes } from '../types/ButtonTypes'
 export default {
   name: 'ME-Button',
   props: {
