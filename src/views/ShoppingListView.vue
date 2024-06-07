@@ -1,6 +1,7 @@
 <template>
+  <h1>move:elevator - shopping list</h1>
   <div class="mdl-grid">
-    <div class="mdl-cell mdl-cell--4-col">
+    <div class="mdl-cell mdl-cell--3-col">
       <InputComponent
         id="product"
         :inputType="InputTypes.TEXT"
@@ -9,7 +10,7 @@
         label="Produkt"
       />
     </div>
-    <div class="mdl-cell mdl-cell--4-col">
+    <div class="mdl-cell mdl-cell--3-col">
       <InputComponent
         id="quantity"
         :inputType="InputTypes.NUMBER"
@@ -19,7 +20,16 @@
         pattern="-?[0-9]*(\.[0-9]+)?"
       />
     </div>
-    <div class="mdl-cell mdl-cell--4-col">
+    <div class="mdl-cell mdl-cell--3-col">
+      <InputComponent
+        id="date"
+        :inputType="InputTypes.DATE"
+        v-model="newDate"
+        @keyup.enter="addItem"
+        label="*Datum"
+      />
+    </div>
+    <div class="mdl-cell mdl-cell--3-col">
       <ButtonComponent @click="addItem" :buttonType="ButtonTypes.SECONDARY"
         >Hinzufügen</ButtonComponent
       >
@@ -36,7 +46,11 @@
     showStaticHint: {{ showStaticHint }}
 
     <div v-if="showDynamicHint || showStaticHint" class="mdl-cell mdl-cell--12-col">
-      <Card hd="Hinweis" bd="Du darfst dieses Produkt nicht hinzufügen! Frage zuerst Deinen Papa" :ft="newItem" />
+      <Card
+        hd="Hinweis"
+        bd="Du darfst dieses Produkt nicht hinzufügen! Frage zuerst Deinen Papa"
+        :ft="newItem"
+      />
     </div>
   </div>
 </template>
@@ -56,29 +70,37 @@ import { InputTypes } from '../types/InputTypes'
 export interface ShoppingItem {
   name: string
   quantity: number
+  date: Date
 }
+
+const LOCALE_STORAGE_ITEM = 'shopping-list'
 const prohibitedProduct = 'Bier'
 const newItem = ref<string>('')
 const newQuantity = ref<number>(1)
+const newDate = ref<Date>(new Date())
 const items = ref<ShoppingItem[]>([])
 
 let showStaticHint = ref<Boolean>(false)
 let showDynamicHint = ref<Boolean>(false)
 
 const loadItems = () => {
-  const savedItems = localStorage.getItem('shopping-list')
+  const savedItems = localStorage.getItem(LOCALE_STORAGE_ITEM)
   if (savedItems) {
     items.value = JSON.parse(savedItems)
   }
 }
 
 const saveItems = () => {
-  localStorage.setItem('shopping-list', JSON.stringify(items.value))
+  localStorage.setItem(LOCALE_STORAGE_ITEM, JSON.stringify(items.value))
 }
 
 const addItem = () => {
   if (newItem.value.trim() !== '' && newQuantity.value > 0) {
-    items.value.push({ name: newItem.value.trim(), quantity: newQuantity.value })
+    items.value.push({
+      name: newItem.value.trim(),
+      quantity: newQuantity.value,
+      date: newDate.value
+    })
     newItem.value = ''
     saveItems()
   }

@@ -1,16 +1,16 @@
 <template>
-  <div class="mdl-textfield mdl-js-textfield">
+  <div class="input-component mdl-textfield mdl-js-textfield">
     <input
       class="mdl-textfield__input"
       :id="id"
-      type="text"
+      :type="inputType === InputTypes.DATE ? 'date' : 'text'"
       :placeholder="placeholder"
       :value="modelValue || initValue"
       @input="handleInput"
       :disabled="disabled"
       :pattern="pattern"
     />
-    <label class="mdl-textfield__label" :for="id">{{ label }}</label>
+    <label class="_mdl-textfield__label" :for="id">{{ label }}</label>
     <span class="mdl-textfield__error">Input is not a number!</span>
   </div>
 </template>
@@ -39,4 +39,11 @@ const handleInput = (event: Event) => {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.input-component {
+  label {
+    font-size: 0.9rem;
+    color: grey;
+  }
+}
+</style>

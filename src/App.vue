@@ -15,7 +15,7 @@ onMounted(loadScript)
 <template>
   <header>
     <nav>
-      <RouterLink to="/">Move Elvator Shopping List</RouterLink>
+      <!-- <RouterLink to="/">Move Elvator Shopping List</RouterLink> -->
     </nav>
   </header>
 
