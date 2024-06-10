@@ -39,6 +39,8 @@
         :items="items"
         :removeFromListAction="removeItem"
         :removeAllFromListAction="removeAll"
+        :checkAction="checkIt"
+        :editAction="editItem"
       />
     </div>
     showDynamicHint : {{ showDynamicHint }}
@@ -70,7 +72,8 @@ import { InputTypes } from '../types/InputTypes'
 export interface ShoppingItem {
   name: string
   quantity: number
-  date: Date
+  date?: Date
+  isChecked?: Boolean
 }
 
 const LOCALE_STORAGE_ITEM = 'shopping-list'
@@ -78,6 +81,7 @@ const prohibitedProduct = 'Bier'
 const newItem = ref<string>('')
 const newQuantity = ref<number>(1)
 const newDate = ref<Date>(new Date())
+const newChecked = ref<Boolean>(false)
 const items = ref<ShoppingItem[]>([])
 
 let showStaticHint = ref<Boolean>(false)
@@ -99,7 +103,8 @@ const addItem = () => {
     items.value.push({
       name: newItem.value.trim(),
       quantity: newQuantity.value,
-      date: newDate.value
+      date: newDate.value,
+      isChecked: newChecked.value
     })
     newItem.value = ''
     saveItems()
@@ -113,6 +118,31 @@ const removeItem = (index: number) => {
 
 const removeAll = () => {
   items.value.splice(0, items.value.length)
+  saveItems()
+}
+
+const checkIt = (index: number) => {
+  // newChecked.value
+  items.value[index].isChecked = !items.value[index].isChecked
+  saveItems()
+}
+
+const editItem = (index: number) => {
+  // Load it in form
+  newItem.value = items.value[index].name
+  newQuantity.value = items.value[index].quantity
+  newDate.value = new Date(items.value[index].date)
+
+
+  // TODO::: Replace date in form not working
+  console.warn(222, items.value[index].date);
+  console.warn(333, newDate.value);
+
+
+  // Remove old item
+  items.value.splice(index, 1)
+
+  // items.value[index].isChecked = !items.value[index].isChecked
   saveItems()
 }
 

@@ -1,16 +1,13 @@
 <template>
-  <div>
     <div class="mdc-touch-target-wrapper">
       <button
-        :disabled="disabled"
         @click="handleClick"
         class="mdl-button mdl-js-button mdl-button--raised"
         :class="classObject"
       >
-        <slot />
+      <slot />
       </button>
     </div>
-  </div>
 </template>
 
 <script setup lang="ts">
@@ -27,9 +24,7 @@ const props = defineProps<Props>()
 const emit = defineEmits<{ (e: 'click'): void }>()
 
 const handleClick = () => {
-  if (!props.disabled) {
-    emit('click')
-  }
+  emit('click')
 }
 
 const classObject =

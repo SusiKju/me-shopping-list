@@ -12,20 +12,32 @@
         <tr v-for="(item, index) in items" :key="index">
           <!-- product name -->
           <td class="product-column mdl-data-table__cell--non-numeric">
-            <span v-if="item.name !== 'Bier'">{{ item.name }}</span>
-            <Chip v-if="item.name === 'Bier'" :text="item.name" />
+            <span v-if="item.name !== 'Bier'" :class="item.isChecked && 'item-is-checked'">{{
+              item.name
+            }}</span>
+            <Chip e2e="chipForProduct" v-if="item.name === 'Bier'" :text="item.name" :class="item.isChecked && 'item-is-checked'"/>
           </td>
           <!-- product quantity -->
-          <td>{{ item.quantity }}</td>
+          <td>
+            <span :class="item.isChecked && 'item-is-checked'">{{ item.quantity }}</span>
+          </td>
           <td class="date-column">
             <Chip v-if="isDateNow(item.date)" :text="formattedDate(item.date)" />
-            <span v-if="!isDateNow(item.date)">
+            <span v-if="!isDateNow(item.date)" :class="item.isChecked && 'item-is-checked'">
               {{ formattedDate(item.date) }}
             </span>
           </td>
           <!-- Action button -->
           <td>
             <ActionButton @click="removeFromListAction(index)">close</ActionButton>
+          </td>
+          <!-- Action button -->
+          <td>
+            <ActionButton @click="checkAction(index)">check</ActionButton>
+          </td>
+          <!-- Action button -->
+          <td>
+            <ActionButton @click="editAction(index)">edit</ActionButton>
           </td>
         </tr>
       </tbody>
@@ -51,6 +63,8 @@ interface Props {
   items: ShoppingItem[]
   removeFromListAction: Function
   removeAllFromListAction: Function
+  checkAction: Function
+  editAction: Function
 }
 
 const props = defineProps<Props>()
@@ -94,14 +108,19 @@ const isDateNow = (date: Date) => {
     justify-content: flex-end;
     margin-top: 50px;
   }
+  .item-is-checked {
+    text-decoration: line-through;
+    * {
+      text-decoration: line-through;
+    }
+  }
   @media only screen and (max-width: 600px) {
     .product-column {
       white-space: normal;
     }
     .date-column {
-    display: none;
+      display: none;
+    }
   }
-}
-
 }
 </style>
